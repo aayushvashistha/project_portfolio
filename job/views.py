@@ -17,3 +17,10 @@ def detail(request, pk):
         'project': project
     }
     return render(request, 'detail.html', context)
+
+def home(request):
+    projects = Project.objects.all()
+    context = {
+        # 'projects': projects
+    }
+    return render(request, 'home.html', context)
