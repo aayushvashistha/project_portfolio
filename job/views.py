@@ -4,12 +4,12 @@ from job.models import Project
 
 # Create your views here.
 
-def index(request):
+def work(request):
     projects = Project.objects.all()
     context = {
         'projects': projects
     }
-    return render(request, 'index.html', context)
+    return render(request, 'work.html', context)
 
 def detail(request, pk):
     project = Project.objects.get(pk=pk)
@@ -19,8 +19,7 @@ def detail(request, pk):
     return render(request, 'detail.html', context)
 
 def home(request):
-    projects = Project.objects.all()
-    context = {
-        # 'projects': projects
-    }
-    return render(request, 'home.html', context)
+    return render(request, 'home.html')
+
+def about(request):
+    return render(request, 'about.html')
