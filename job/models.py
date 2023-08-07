@@ -10,3 +10,9 @@ class Project(models.Model):
 
     def __str__(self):
         return self.title
+    
+class Resume(models.Model):
+    cv = models.FileField(upload_to='documents')
+
+    def __str__(self):
+        return self.cv
