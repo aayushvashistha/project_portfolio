@@ -14,5 +14,5 @@ class Project(models.Model):
 class Resume(models.Model):
     cv = models.FileField(upload_to='documents')
 
-    def __str__(self):
-        return self.cv
+    # def __str__(self):
+    #     return self.cv
