@@ -8,6 +8,7 @@ urlpatterns = [
     path('work', views.work, name='work'),
     path("work/<int:pk>", views.detail, name="detail"),
     path('about', views.about, name='about'),
+    path('download', views.download, name='download'),
 ]
 
 urlpatterns += static(settings.STATIC_URL, document_root = settings.STATIC_ROOT)
