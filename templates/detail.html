@@ -2,18 +2,19 @@
 {% load static %}
 
 {% block page_content %}
-<h1>{{ project.title }}</h1>
-<div class="row">
+<h1 style="color: grey;">{{ project.title }}</h1>
+<div class="row" style="color: rgb(20, 1, 1);">
     <div class="col-md-8">
         <img src="{{ project.image.url }}" alt="" width="100%">
     </div>
     <div class="col-md-4">
         <h5>About the project:</h5>
-        <p>{{ project.description }}</p>
-        <br>
+            <p>{{ project.description }}</p><br>
         <h5>Technology used:</h5>
-        <p>{{ project.technology }}</p>
-        <a class="btn btn-outline-secondary" href="/work">Back</a>
+            <p>{{ project.technology }}</p>
+        <div>
+            <a class="btn btn-outline-secondary" href="/work">Back</a>
+        </div>
     </div>
 </div>
 {% endblock %}
