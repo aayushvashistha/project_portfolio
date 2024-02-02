@@ -2,7 +2,7 @@ from django.shortcuts import render, HttpResponse
 from job.models import Project, Resume
 from django.http import StreamingHttpResponse
 from django.conf import settings
-import os
+import os, sys, subprocess, time
 # from rest_framework import generics
 
 # Create your views here.
@@ -21,8 +21,33 @@ def detail(request, pk):
     }
     return render(request, 'detail.html', context)
 
+import os
+from django.shortcuts import render
+import subprocess
+import json, re, ast
+
 def home(request):
-    return render(request, 'home.html')
+    try:
+        # Path to the external script
+        script_path = os.path.join(os.path.dirname(__file__), 'stocks.py')
+
+        # Run the external script and capture the output
+        result = subprocess.run(['python', script_path], capture_output=True, text=True)
+        # print(result.stdout)
+        match = re.search(r'{.*}',result.stdout)
+        # print(match)
+        if match:
+            dict_str = match.group(0)
+            result_dict = ast.literal_eval(dict_str)
+            print(result_dict)
+        else:
+            print("No dictionary found in the string.")
+
+    except Exception as e:
+        # Handle exceptions, if any
+        result_dict = f"Error: Stock data currently not available, try reloading the page{str(e)}"
+
+    return render(request, 'home.html', {'result_dict': result_dict})
 
 def about(request):
     return render(request, 'about.html')
