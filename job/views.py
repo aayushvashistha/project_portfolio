@@ -1,12 +1,10 @@
 from django.shortcuts import render, HttpResponse
-from job.models import Project, Resume
+from job.models import Project
 from django.http import StreamingHttpResponse
 from django.conf import settings
-import os, sys, subprocess, time
-# from rest_framework import generics
+import os, sys, subprocess, re, ast
 
 # Create your views here.
-
 def work(request):
     projects = Project.objects.all()
     context = {
@@ -21,11 +19,6 @@ def detail(request, pk):
     }
     return render(request, 'detail.html', context)
 
-import os
-from django.shortcuts import render
-import subprocess
-import json, re, ast
-
 def home(request):
     try:
         # Path to the external script
@@ -33,9 +26,7 @@ def home(request):
 
         # Run the external script and capture the output
         result = subprocess.run(['python', script_path], capture_output=True, text=True)
-        # print(result.stdout)
         match = re.search(r'{.*}',result.stdout)
-        # print(match)
         if match:
             dict_str = match.group(0)
             result_dict = ast.literal_eval(dict_str)
