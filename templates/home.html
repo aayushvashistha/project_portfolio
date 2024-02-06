@@ -31,19 +31,11 @@
         I am a skilled <b>Software Engineer</b> with expertise in building robust web applications using Django. </br>
         However, I'm also passionate about <b>Data Engineering</b> and looking to build my future in this field  </br></br>
         Thanks for visiting my portfolio to explore my journey and achievements
-    </p>
-</div>
+    </p></br></br>
 
-<style>
-       
-    #stocks-list {
-        margin-right: 2000px; /* Adjust the margin as needed */
-    }
-</style>
-
-{% if result_dict %}
+    {% if result_dict %}
 <div id="stocks-list">
-    <h4 style="color: grey;">Stock Price</h4>
+    <h4 style="color: grey;">Popular Stocks</h4>
 <ul style="list-style: none; color: grey">
 
     {% for stock, price in result_dict.items %}
@@ -54,6 +46,23 @@
 {% else %}
     <p>No data available.</p>
 {% endif %}
+</div>
+
+<style>
+       
+    #stocks-list {
+        margin-right: 20px; /* Adjust the margin as needed */
+    }
+    #stocks-list ul {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        #stocks-list li {
+            display: inline-block;
+            margin-right: 10px; /* Adjust the margin as needed */
+        }
+</style>
 
 <div>
     <a class="btn btn-primary" href="/work">Check my work section</a>
