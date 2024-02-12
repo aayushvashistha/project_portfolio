@@ -3,29 +3,31 @@
 {% load static %}
 
 {% block page_content %}
+<h1 class="display-4 font-weight-normal" style="color: rgb(223 120 58); font-style: italic;">
+    <div id="elementEl">Hello!&nbsp; I&nbsp; am&nbsp;Aayush&nbsp; Vashistha</div>
+</h1>
 
-<div class="col-md-5 p-lg-5 mx-auto my-5">   
-    <h1 class="display-4 font-weight-normal" style="color: rgb(219, 235, 229); font-style: italic;">
-    <div id="elementEl">Hello! I am <br/> Aayush Vashistha</div>
-        <!-- Hello! I am</br> Aayush Vashistha -->
-    </h1>
-    <script>
-        'use strict';
-        
-        function typeWriter(el) {
-            const textArray = el.innerText.split('');
-            el.innerText = '';
-            textArray.forEach((letter, i) =>
-                setTimeout(() => (el.innerText += letter), 95 * i)
-            );
-        
-            setInterval(() => typeWriter(el), 8000);
-        }
-        
-        const elementEl = document.getElementById('elementEl');
-        typeWriter(elementEl);
-        
-        </script>        
+<script>
+    // 'use strict';
+    
+    function typeWriter(el) {
+        const textArray = el.innerText.split('');
+        el.innerText = '';
+        textArray.forEach((letter, i) =>
+            setTimeout(() => (el.innerText += letter), 95 * i)
+        );
+    
+        setInterval(() => typeWriter(el), 8000);
+    }
+    
+    const elementEl = document.getElementById('elementEl');
+    typeWriter(elementEl);
+</script>
+
+
+<div class="col-md-5 p-lg-5 mx-auto">   
+   
+           
 
     <p class="lead font-weight-normal fs-4 lh-sm" style="color: rgb(140, 145, 148);">
         I am a skilled <b>Software Engineer</b> with expertise in building robust web applications using Django. </br>
