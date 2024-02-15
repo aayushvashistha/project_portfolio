@@ -2,7 +2,15 @@ from django.shortcuts import render, HttpResponse
 from job.models import Project
 from django.http import StreamingHttpResponse
 from django.conf import settings
+import time
 import os, sys, subprocess, re, ast
+
+streamlit_app_path = os.path.join(os.path.dirname(__file__), "Project1.py")
+
+def run_streamlit_app(app_path):
+    command = f"streamlit run {app_path}"
+    process = subprocess.Popen(command, shell=True)
+    return process
 
 # Create your views here.
 def work(request):
@@ -14,10 +22,17 @@ def work(request):
 
 def detail(request, pk):
     project = Project.objects.get(pk=pk)
+    print(project, pk)
     context = {
         'project': project
     }
+
+    if pk == 1:
+        run_streamlit_app(streamlit_app_path)
+        time.sleep(5)
+    
     return render(request, 'detail.html', context)
+    
 
 def home(request):
     try:
