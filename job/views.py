@@ -42,16 +42,16 @@ def home(request):
         # Run the external script and capture the output
         result = subprocess.run(['python', script_path], capture_output=True, text=True)
         match = re.search(r'{.*}',result.stdout)
-        if match:
+        if match is not None:
             dict_str = match.group(0)
             result_dict = ast.literal_eval(dict_str)
             print(result_dict)
         else:
-            print("No dictionary found in the string.")
+            raise Exception("No dictionary found in the string.")
 
     except Exception as e:
-        # Handle exceptions, if any
-        result_dict = f"Error: Stock data currently not available, try reloading the page{str(e)}"
+        result_dict = f"Error: Stock data currently not available, {str(e)}"
+        print(result_dict)
 
     return render(request, 'home.html', {'result_dict': result_dict})
 
