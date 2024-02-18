@@ -18,7 +18,7 @@ st.title('Stock Trend Prediction')
 user_ip = st.text_input("Enter stock Ticker", 'AAPL')
 df = yf.download(user_ip, start, end)
 
-st.subheader('Data from 2010 - 2022')
+st.subheader('Data from 2010 - till date')
 st.write(df.describe())
 
 #Visualizations:
