@@ -4,7 +4,7 @@ import pandas as pd
 import yfinance as yf
 
 def main():
-    stocks = ["TSLA", "AAPL", "GOOG", "TD", "AMZN", "INFY"]  # Add/Remove stocks as required
+    stocks = ["TSLA", "AAPL", "GOOG", "TD", "AMZN", "NVDA"]  # Add/Remove stocks as required
     data = pd.DataFrame()
 
     for ticker in stocks:

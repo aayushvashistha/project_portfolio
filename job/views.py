@@ -3,6 +3,7 @@ from job.models import Project
 from django.http import StreamingHttpResponse
 from django.conf import settings
 import time
+from datetime import datetime
 import os, sys, subprocess, re, ast
 
 streamlit_app_path = os.path.join(os.path.dirname(__file__), "Project1.py")
@@ -46,14 +47,29 @@ def home(request):
             dict_str = match.group(0)
             result_dict = ast.literal_eval(dict_str)
             print(result_dict)
+            now = datetime.now()
+            print(now.weekday())
+            is_market_open = (
+            now.weekday() < 5 and (now.hour < 16 or (now.hour == 16 and now.minute == 0))
+            )
+            print(is_market_open)
+            if not is_market_open:
+                msg = "Market is closed"
+            else:
+                msg = None
         else:
             raise Exception("No dictionary found in the string.")
 
     except Exception as e:
         result_dict = f"Error: Stock data currently not available, {str(e)}"
+        msg = None
         print(result_dict)
 
-    return render(request, 'home.html', {'result_dict': result_dict})
+    context = {
+        'result_dict': result_dict, 'msg': msg
+        }
+
+    return render(request, 'home.html', context)
 
 def about(request):
     return render(request, 'about.html')

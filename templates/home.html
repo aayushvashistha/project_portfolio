@@ -57,6 +57,9 @@
           </tr>
           {% endif %}
         </table>
+        {% if msg %}
+        <p style="color: grey">* {{ msg }}</p>
+        {% endif %}
       </div>
     </div>
   </div>
