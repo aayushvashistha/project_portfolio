@@ -2,12 +2,12 @@ FROM python:3
 
 LABEL maintainer="aayush"
 
-WORKDIR /Users/Aayus/project_portfolio
+WORKDIR /app
 
-COPY project_portfolio /portfolio/
+COPY . /app/
 
 RUN pip install Django
-WORKDIR /portfolio
+WORKDIR /app
 
 EXPOSE 8000
 
