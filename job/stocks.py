@@ -1,18 +1,38 @@
 # stocks.py
 
-import pandas as pd
-import yfinance as yf
+import requests
 
-def main():
-    stocks = ["AAPL"] #, "AAPL", "GOOG", "TD", "AMZN", "NVDA"]  # Add/Remove stocks as required
-    data = pd.DataFrame()
+def get_finnhub_price(symbol, api_key):
+    url = "https://finnhub.io/api/v1/quote"
+    params = {
+        "symbol": symbol,
+        "token": api_key
+    }
 
-    for ticker in stocks:
-        data[ticker] = yf.download(ticker, period="1d", interval="1m")[['Close']]
+    try:
+        response = requests.get(url, params=params)
+        response.raise_for_status()
+        data = response.json()
 
-    result_dict = {ticker: data[ticker].iloc[-1] for ticker in stocks}
-    return result_dict  # Return the data from the main function
+        if data and "c" in data and data["c"] != 0:
+            return data["c"]
+        else:
+            print(f"No valid price data for {symbol}")
+            return None
+    except requests.RequestException as e:
+        print(f"Request error for {symbol}: {e}")
+        return None
+
+def get_multiple_prices(symbols, api_key):
+    result = {}
+    for symbol in symbols:
+        price = get_finnhub_price(symbol, api_key)
+        if price is not None:
+            result[symbol] = price
+    return result
 
 if __name__ == "__main__":
-    result = main()
-    print(result)
+    API_KEY = "cvst7ohr01qhup0su340cvst7ohr01qhup0su34g"
+    symbols = ["AAPL", "TSLA", "TD", "NVDA", "GOOGL", "AMZN"]
+    prices = get_multiple_prices(symbols, API_KEY)
+    print(prices)
