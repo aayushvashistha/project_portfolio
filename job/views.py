@@ -39,11 +39,8 @@ def home(request):
     try:
         # Path to the external script
         script_path = os.path.join(os.path.dirname(__file__), 'stocks.py')
-        print("------------------------------->>>>>>>>>>>", script_path)
         # Run the external script and capture the output
-        print("Before subprocess===========================================>")
         result = subprocess.run(['python', script_path], capture_output=True, text=True)
-        print("After subprocess===========================================>",result)
         match = re.search(r'{.*}',result.stdout)
         if match is not None:
             dict_str = match.group(0)
