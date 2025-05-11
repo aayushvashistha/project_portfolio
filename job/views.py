@@ -31,7 +31,7 @@ def detail(request, pk):
         return redirect('https://streamlit-service.onrender.com') #For Prod deployment
 
     if pk ==2:
-        return redirect('https://www.newgenapps.ai')
+        return redirect('https://www.nextgenapps.ai')
     
     context = {
         'project': project
