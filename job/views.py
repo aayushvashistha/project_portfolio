@@ -1,4 +1,4 @@
-from django.shortcuts import render, HttpResponse
+from django.shortcuts import render, HttpResponse, redirect, get_object_or_404
 from job.models import Project
 from django.http import StreamingHttpResponse
 from django.conf import settings
@@ -22,16 +22,19 @@ def work(request):
     return render(request, 'work.html', context)
 
 def detail(request, pk):
-    project = Project.objects.get(pk=pk)
+    project = get_object_or_404(Project, pk=pk)
     print(project, pk)
-    context = {
-        'project': project
-    }
 
     if pk == 1:
         run_streamlit_app(streamlit_app_path)
         time.sleep(5)
+
+    if pk ==2:
+        return redirect(request='https://www.newgenapps.ai')
     
+    context = {
+        'project': project
+    }
     return render(request, 'detail.html', context)
     
 
