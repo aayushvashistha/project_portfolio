@@ -26,11 +26,12 @@ def detail(request, pk):
     print(project, pk)
 
     if pk == 1:
-        run_streamlit_app(streamlit_app_path)
-        time.sleep(5)
+        # run_streamlit_app(streamlit_app_path)
+        # time.sleep(5)
+        return redirect('https://streamlit-service.onrender.com') #For Prod deployment
 
     if pk ==2:
-        return redirect(request='https://www.newgenapps.ai')
+        return redirect('https://www.newgenapps.ai')
     
     context = {
         'project': project
