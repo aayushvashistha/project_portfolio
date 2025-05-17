@@ -3,13 +3,14 @@ import matplotlib.pyplot as plt
 import tensorflow as tf
 import pandas as pd
 import numpy as np
-import pandas_datareader as data
+# import pandas_datareader as data
 from sklearn.preprocessing import MinMaxScaler
 import datetime as dt
 from keras.models import load_model
 import streamlit as st
 import os
 
+print("---------------inside streamli project 1 ------------------")
 start = "2010-01-01"
 end = dt.date.today()
 
@@ -83,3 +84,5 @@ plt.xlabel('Time')
 plt.ylabel('Price')
 plt.legend()
 st.pyplot(fig2)
+
+print("------EXITING STREAMLIT PROJECT 1-----------------")
