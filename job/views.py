@@ -28,7 +28,7 @@ def detail(request, pk):
     if pk == 1:
         # run_streamlit_app(streamlit_app_path)
         # time.sleep(5)
-        return redirect('https://streamlit-service.onrender.com') #For Prod deployment
+        return redirect('https://streamlit-service-aokl.onrender.com/') #For Prod deployment
 
     if pk ==2:
         return redirect('https://www.nextgenapps.ai')
