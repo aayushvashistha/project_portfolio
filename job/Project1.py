@@ -11,7 +11,7 @@ import streamlit as st
 from pathlib import Path
 import os
 
-print("---------------inside streamli project 1 ------------------")
+print("---------------inside streamlit project 1 ------------------")
 start = "2010-01-01"
 end = dt.date.today()
 
@@ -53,13 +53,14 @@ scaler = MinMaxScaler(feature_range=(0,1))
 
 data_training_array = scaler.fit_transform(data_training)
 
-# model = load_model(os.path.join(os.path.dirname(__file__), 'job/keras_model.h5'))
+model = load_model(os.path.join(os.path.dirname(__file__), 'keras_model.h5'))
 
-model_path = Path(__file__).parent / 'job' / 'keras_model.h5'
-if not model_path.exists():
-    raise FileNotFoundError(f"Model not found at: {model_path.resolve()}")
+# model_path = Path(__file__).parent / 'keras_model.h5'
+print("######### Model Path ########", model)
+# if not model_path.exists():
+#     raise FileNotFoundError(f"Model not found at: {model_path.resolve()}")
 
-model = load_model(model_path)
+# model = load_model(model_path)
 
 past_100_days = data_training.tail(100)
 final_df = past_100_days.append(data_testing, ignore_index=True)
