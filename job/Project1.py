@@ -62,7 +62,7 @@ scaler = MinMaxScaler(feature_range=(0, 1))
 data_training_array = scaler.fit_transform(data_training)
 
 # Load the pre-trained model
-model = load_model(os.path.join(os.path.dirname(__file__), 'keras_model.h5'))
+model = load_model(os.path.join(os.path.dirname(__file__), 'keras_model.keras'))
 
 # Preparing data for prediction
 past_100_days = data_training.tail(100)

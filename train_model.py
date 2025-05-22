@@ -45,6 +45,6 @@ output_dir = './job'
 os.makedirs(output_dir, exist_ok=True)
 
 # Save model safely (HDF5 format, now compatible for loading)
-model.save(os.path.join(output_dir, 'keras_model.h5'))
+model.save(os.path.join(output_dir, 'keras_model.keras'))
 
 print("✅ Model training and saving complete.")
