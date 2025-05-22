@@ -67,7 +67,7 @@ scaler = MinMaxScaler(feature_range=(0, 1))
 data_training_array = scaler.fit_transform(data_training)
 
 # Load model
-model_path = os.path.join(os.path.dirname(__file__), 'keras_model.h5')
+model_path = os.path.join(os.path.dirname(__file__), 'keras_model.keras')
 if not os.path.exists(model_path):
     st.error("Trained model file not found. Please ensure 'keras_model.h5' exists.")
     st.stop()
