@@ -20,7 +20,6 @@ cycler==0.12.1
 Django==4.0.4
 django-cors-headers==4.2.0
 djangorestframework==3.14.0
-dlib==19.24.2
 dnspython==2.3.0
 executing==0.8.3
 flatbuffers==25.2.10
