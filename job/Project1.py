@@ -72,7 +72,7 @@ if not os.path.exists(model_path):
     st.error("Trained model file not found. Please ensure 'keras_model.h5' exists.")
     st.stop()
 
-model = load_model(model_path)
+model = load_model(model_path, compile=False)
 
 # Prepare test data
 past_100_days = data_training.tail(100)
