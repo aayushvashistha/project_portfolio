@@ -9,117 +9,127 @@ from sklearn.preprocessing import MinMaxScaler
 from sklearn.metrics import mean_absolute_error, mean_squared_error, r2_score
 import os
 
-# Streamlit Application Header
-st.title('Stock Trend Prediction')
+# Streamlit App Header
+st.title('📈 Stock Trend Prediction')
 st.markdown("""
-**Disclaimer:** 
-The predictions made by this model are based on historical data and machine learning algorithms. They should not be used as a sole basis for any investment decision. The stock market is unpredictable, and future prices may differ from the predictions shown here. Please consult a financial advisor before making investment decisions.
+**Disclaimer:**  
+Predictions are based on historical stock data and machine learning models. Use them for educational purposes only.  
+Consult a financial advisor before making investment decisions.
 """)
 
-# User Input for Stock Ticker
-user_ip = st.text_input("Enter stock Ticker", 'AAPL')
+# User Input
+user_ip = st.text_input("Enter Stock Ticker Symbol (e.g., AAPL)", 'AAPL')
 start = "2010-01-01"
 end = dt.date.today()
 
-# Download data using yfinance
+# Download data
 df = yf.download(user_ip, start, end)
 
-# Display statistical summary of data
-st.subheader('Data from 2010 - till date')
+if df.empty:
+    st.error("No data found for the given ticker. Please try a valid symbol.")
+    st.stop()
+
+# Display statistics
+st.subheader('📊 Historical Data Summary')
 st.write(df.describe())
 
-# Visualizations
-st.subheader('Closing Price vs Time Chart')
+# Visualization 1
+st.subheader('📉 Closing Price vs Time')
 fig = plt.figure(figsize=(12, 6))
-plt.plot(df.Close)
-st.pyplot(fig)
-
-# 100 Moving Average Visualization
-st.subheader('Closing Price vs Time Chart with 100MA')
-ma100 = df.Close.rolling(100).mean()
-fig = plt.figure(figsize=(12, 6))
-plt.plot(df.Close)
-plt.plot(ma100, 'r', label='100 Day Moving Average')
+plt.plot(df['Close'], label='Close Price')
 plt.legend()
 st.pyplot(fig)
 
-# 100 and 200 Moving Averages Visualization
-st.subheader('Closing Price vs Time Chart with 100MA & 200MA')
-ma200 = df.Close.rolling(200).mean()
+# Moving Average 100
+ma100 = df['Close'].rolling(100).mean()
+st.subheader('📉 Close Price with 100-Day Moving Average')
 fig = plt.figure(figsize=(12, 6))
-plt.plot(ma100, 'r', label='100 Day Moving Average')
-plt.plot(ma200, 'g', label='200 Day Moving Average')
-plt.plot(df.Close, 'b', label='Actual Closing Price')
+plt.plot(df['Close'], label='Close Price')
+plt.plot(ma100, 'r', label='100 MA')
 plt.legend()
 st.pyplot(fig)
 
-# Splitting data into Training and Testing
-data_training = pd.DataFrame(df['Close'][0:int(len(df) * 0.70)])
-data_testing = pd.DataFrame(df['Close'][int(len(df) * 0.70): int(len(df))])
+# Moving Average 100 & 200
+ma200 = df['Close'].rolling(200).mean()
+st.subheader('📉 Close Price with 100 & 200-Day Moving Averages')
+fig = plt.figure(figsize=(12, 6))
+plt.plot(df['Close'], label='Close Price')
+plt.plot(ma100, 'r', label='100 MA')
+plt.plot(ma200, 'g', label='200 MA')
+plt.legend()
+st.pyplot(fig)
 
-# Scaling the data
+# Prepare training/testing datasets
+data_training = pd.DataFrame(df['Close'][0:int(len(df)*0.70)])
+data_testing = pd.DataFrame(df['Close'][int(len(df)*0.70):])
+
 scaler = MinMaxScaler(feature_range=(0, 1))
 data_training_array = scaler.fit_transform(data_training)
 
-# Load the pre-trained model
-model = load_model(os.path.join(os.path.dirname(__file__), 'keras_model.keras'))
+# Load model
+model_path = os.path.join(os.path.dirname(__file__), 'keras_model.h5')
+if not os.path.exists(model_path):
+    st.error("Trained model file not found. Please ensure 'keras_model.h5' exists.")
+    st.stop()
 
-# Preparing data for prediction
+model = load_model(model_path)
+
+# Prepare test data
 past_100_days = data_training.tail(100)
-final_df = past_100_days.append(data_testing, ignore_index=True)
+final_df = pd.concat([past_100_days, data_testing], ignore_index=True)
 input_data = scaler.fit_transform(final_df)
 
 x_test = []
 y_test = []
 
-# Creating test datasets
-for i in range(100, input_data.shape[0]):
-    x_test.append(input_data[i-100: i])
+for i in range(100, len(input_data)):
+    x_test.append(input_data[i-100:i])
     y_test.append(input_data[i, 0])
 
-x_test, y_test = np.array(x_test), np.array(y_test)
+x_test = np.array(x_test)
+y_test = np.array(y_test)
 
-# Making Predictions
+# Predictions
 y_predicted = model.predict(x_test)
 
-# Inversing scaling to get the actual predicted prices
-scaler = scaler.scale_
-scale_factor = 1 / scaler[0]
+# Rescale predictions
+scale_factor = 1 / scaler.scale_[0]
 y_predicted = y_predicted * scale_factor
 y_test = y_test * scale_factor
 
-# Performance Metrics
+# Metrics
 mae = mean_absolute_error(y_test, y_predicted)
 rmse = np.sqrt(mean_squared_error(y_test, y_predicted))
 r2 = r2_score(y_test, y_predicted)
 
-# Display performance metrics
-st.subheader("**Model Performance Metrics**")
-st.write(f"Mean Absolute Error (MAE): {mae:.4f}")
-st.write(f"Root Mean Squared Error (RMSE): {rmse:.4f}")
-st.write(f"R-squared: {r2:.4f}")
+# Display metrics
+st.subheader("📈 Model Performance Metrics")
+st.write(f"**Mean Absolute Error (MAE):** {mae:.2f}")
+st.write(f"**Root Mean Squared Error (RMSE):** {rmse:.2f}")
+st.write(f"**R-squared Score (R²):** {r2:.2f}")
 
-# Display a suggestion based on the model's performance
+# Feedback based on R²
 if r2 > 0.9:
-    st.write("The model's predictions are quite accurate, but still, do not rely solely on them for investment decisions. Past performance does not guarantee future results.")
+    st.success("The model shows strong predictive performance.")
 else:
-    st.write("The model's predictions show some discrepancy with the actual data. Please be cautious and consult a financial advisor.")
+    st.warning("The model predictions have some error. Interpret with caution.")
 
-# Final Visualization of Predictions vs Original Data
-st.subheader('Predictions vs Original')
+# Plot predictions
+st.subheader('🔮 Predicted vs Actual Closing Prices')
 fig2 = plt.figure(figsize=(12, 6))
-plt.plot(y_test, 'b', label='Original Price')
-plt.plot(y_predicted, 'g', label='Predicted Price')
+plt.plot(y_test, label='Actual Price')
+plt.plot(y_predicted, label='Predicted Price')
 plt.xlabel('Time')
-plt.ylabel('Price')
+plt.ylabel('Stock Price')
 plt.legend()
 st.pyplot(fig2)
 
-# Display predicted stock price for the next day
-next_day_prediction = model.predict(input_data[-100:].reshape(1, 100, 1))
-next_day_prediction = next_day_prediction * scale_factor  # Scale back to original
+# Predict next day
+next_day_input = input_data[-100:].reshape(1, 100, 1)
+next_day_prediction = model.predict(next_day_input)
+next_day_prediction = next_day_prediction * scale_factor
+
 predicted_price = f"${next_day_prediction[0][0]:.2f}"
+st.markdown(f"### 📌 **Predicted Next Day Price: {predicted_price}**")
 
-st.markdown(f"### 🚀 **Predicted stock price for the next day: {predicted_price}**")
-
-print("------EXITING STREAMLIT PROJECT 1-----------------")
+print("------ STREAMLIT APP ENDED SUCCESSFULLY ------")

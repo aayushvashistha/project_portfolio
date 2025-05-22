@@ -2,8 +2,8 @@ import yfinance as yf
 import numpy as np
 import pandas as pd
 from sklearn.preprocessing import MinMaxScaler
-from tensorflow.keras.models import Model
-from tensorflow.keras.layers import Input, LSTM, Dense
+from tensorflow.keras.models import Sequential
+from tensorflow.keras.layers import LSTM, Dense
 import datetime as dt
 import os
 
@@ -18,6 +18,7 @@ data = df[['Close']]
 scaler = MinMaxScaler()
 data_scaled = scaler.fit_transform(data)
 
+# Train-test split
 train_size = int(len(data_scaled) * 0.70)
 train_data = data_scaled[:train_size]
 
@@ -28,13 +29,11 @@ for i in range(100, len(train_data)):
 
 x_train, y_train = np.array(x_train), np.array(y_train)
 
-# Build model using Input layer explicitly
-input_layer = Input(shape=(100, 1), name="input_layer")
-x = LSTM(50, return_sequences=True)(input_layer)
-x = LSTM(50)(x)
-output = Dense(1)(x)
-
-model = Model(inputs=input_layer, outputs=output)
+# Build model using Sequential API (safer for .h5 saving)
+model = Sequential()
+model.add(LSTM(50, return_sequences=True, input_shape=(100, 1)))
+model.add(LSTM(50))
+model.add(Dense(1))
 model.compile(optimizer='adam', loss='mean_squared_error')
 
 # Train model
@@ -44,7 +43,7 @@ model.fit(x_train, y_train, epochs=10, batch_size=32)
 output_dir = './job'
 os.makedirs(output_dir, exist_ok=True)
 
-# Save model safely (HDF5 format, now compatible for loading)
-model.save(os.path.join(output_dir, 'keras_model.keras'))
+# Save the model using .h5 format (recommended for compatibility)
+model.save(os.path.join(output_dir, 'keras_model.h5'))
 
 print("✅ Model training and saving complete.")
